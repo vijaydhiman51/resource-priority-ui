@@ -16,6 +16,17 @@ const DAYS = [
   "Holiday",
 ];
 
+const DAY_SHORT = {
+  Sunday: "Sun",
+  Monday: "Mon",
+  Tuesday: "Tue",
+  Wednesday: "Wed",
+  Thursday: "Thu",
+  Friday: "Fri",
+  Saturday: "Sat",
+  Holiday: "Hol",
+};
+
 function ResourcePriorityUI() {
   const emptyResource = {
     Id: "",
@@ -107,25 +118,25 @@ function ResourcePriorityUI() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold">Resource Priority Generator</h1>
+    <div className="min-h-screen bg-background p-4">
+      <div className="max-w-7xl mx-auto space-y-5">
+        <h1 className="text-2xl font-bold">Resource Priority Generator</h1>
 
         <Card className="rounded-2xl shadow-sm">
-          <CardContent className="p-6 space-y-4">
-            <h2 className="text-xl font-semibold">
+          <CardContent className="p-5 space-y-4">
+            <h2 className="text-lg font-semibold">
               {editIndex !== null ? "Edit Resource" : "Add Resource"}
             </h2>
 
-            <div className="grid md:grid-cols-4 gap-4">
+            <div className="grid md:grid-cols-4 gap-3">
               <Input
-                placeholder="Resource ID"
+                placeholder="ID"
                 value={resource.Id}
                 onChange={(e) => handleInput("Id", e.target.value)}
               />
 
               <Input
-                placeholder="Resource Name"
+                placeholder="Name"
                 value={resource.Name}
                 onChange={(e) => handleInput("Name", e.target.value)}
               />
@@ -137,31 +148,31 @@ function ResourcePriorityUI() {
               />
 
               <Input
-                placeholder="Season Hours"
+                placeholder="Hours"
                 value={resource.SeasonHours}
                 onChange={(e) => handleInput("SeasonHours", e.target.value)}
               />
             </div>
 
             <div>
-              <p className="font-medium mb-3">Available Days</p>
-              <div className="grid md:grid-cols-4 gap-3">
+              <p className="font-medium mb-2 text-sm">Available Days</p>
+              <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
                 {DAYS.filter((d) => d !== "Holiday").map((day) => (
                   <label
                     key={day}
-                    className="flex items-center gap-2 border rounded-xl p-3"
+                    className="flex items-center justify-center gap-2 border rounded-lg px-2 py-2 text-sm"
                   >
                     <Checkbox
                       checked={resource.AvailableDays.includes(day)}
                       onCheckedChange={() => handleDayToggle(day)}
                     />
-                    <span>{day}</span>
+                    <span>{DAY_SHORT[day]}</span>
                   </label>
                 ))}
               </div>
             </div>
 
-            <label className="flex items-center gap-3">
+            <label className="flex items-center gap-2 text-sm">
               <Checkbox
                 checked={resource.HolidayAvailable}
                 onCheckedChange={(value) =>
@@ -173,7 +184,7 @@ function ResourcePriorityUI() {
 
             <div className="flex gap-3">
               <Button onClick={saveResource} className="rounded-xl">
-                {editIndex !== null ? "Update Resource" : "Add Resource"}
+                {editIndex !== null ? "Update" : "Add"}
               </Button>
 
               {editIndex !== null && (
@@ -189,83 +200,98 @@ function ResourcePriorityUI() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl shadow-sm">
-          <CardContent className="p-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Resources Added</h2>
-              <Button onClick={generateGrid} className="rounded-xl">
-                Generate Priority Grid
-              </Button>
-            </div>
-
-            <div className="space-y-2">
-              {resources.map((r, index) => (
-                <div
-                  key={index}
-                  className="border rounded-xl p-4 flex justify-between items-center"
-                >
-                  <div>
-                    <p className="font-semibold">{r.Name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      Program: {r.Program} | Hours: {r.SeasonHours}
-                    </p>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      className="rounded-xl"
-                      onClick={() => editResource(index)}
-                    >
-                      Edit
-                    </Button>
-
-                    <Button
-                      variant="destructive"
-                      className="rounded-xl"
-                      onClick={() => deleteResource(index)}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {grid.length > 0 && (
+        {(resources.length > 0 || grid.length > 0) && (
           <Card className="rounded-2xl shadow-sm">
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">
-                Final Priority Grid
-              </h2>
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">Priority Layout</h2>
+                <Button onClick={generateGrid} className="rounded-xl">
+                  Generate Grid
+                </Button>
+              </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-sm">
-                  <thead>
-                    <tr>
-                      <th className="border p-3 text-left">Row</th>
-                      {DAYS.map((day) => (
-                        <th key={day} className="border p-3 text-left">
-                          {day}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {grid.map((row, index) => (
-                      <tr key={index}>
-                        <td className="border p-3">{index + 1}</td>
-                        {DAYS.map((day) => (
-                          <td key={day} className="border p-3">
-                            {row[day] || "-"}
-                          </td>
+              <div className="grid lg:grid-cols-[380px_1fr] gap-6 items-start">
+                <div className="space-y-3">
+                  {resources.map((r, index) => (
+                    <div
+                      key={index}
+                      className="border rounded-xl p-3 space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold">{r.Name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {r.SeasonHours} h
+                          </p>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => editResource(index)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteResource(index)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1 text-xs">
+                        {DAYS.filter((d) => d !== "Holiday").map((day) => (
+                          <span
+                            key={day}
+                            className={`px-2 py-1 rounded border ${
+                              r.AvailableDays.includes(day)
+                                ? "bg-muted"
+                                : "opacity-40"
+                            }`}
+                          >
+                            {DAY_SHORT[day]}
+                          </span>
                         ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                        {r.HolidayAvailable && (
+                          <span className="px-2 py-1 rounded border bg-muted">
+                            Hol
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {grid.length > 0 && (
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse text-sm">
+                      <thead>
+                        <tr>
+                          {DAYS.map((day) => (
+                            <th key={day} className="border p-2 text-left">
+                              {DAY_SHORT[day]}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {grid.map((row, index) => (
+                          <tr key={index}>
+                            {DAYS.map((day) => (
+                              <td key={day} className="border p-2">
+                                {row[day] || "-"}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
