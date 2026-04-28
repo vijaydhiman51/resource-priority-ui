@@ -1,0 +1,84 @@
+[
+  {
+    "Id": 1,
+    "Name": "PAR-1",
+    "Program": "A",
+    "AvailableDays": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "SeasonHours": 1,
+    "HolidayAvailable": false
+  },
+  {
+    "Id": 2,
+    "Name": "PAR-2",
+    "Program": "A",
+    "AvailableDays": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "SeasonHours": 5,
+    "HolidayAvailable": false
+  },
+  {
+    "Id": 3,
+    "Name": "PBR-1",
+    "Program": "B",
+    "AvailableDays": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "SeasonHours": 2,
+    "HolidayAvailable": false
+  },
+  {
+    "Id": 4,
+    "Name": "PBR-2",
+    "Program": "B",
+    "AvailableDays": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "SeasonHours": 3,
+    "HolidayAvailable": false
+  },
+  {
+    "Id": 5,
+    "Name": "PCR-1",
+    "Program": "C",
+    "AvailableDays": [
+      "Sunday",
+      "Saturday"
+    ],
+    "SeasonHours": 1,
+    "HolidayAvailable": true
+  },
+  {
+    "Id": 6,
+    "Name": "PCR-2",
+    "Program": "C",
+    "AvailableDays": [
+      "Sunday",
+      "Saturday"
+    ],
+    "SeasonHours": 7,
+    "HolidayAvailable": true
+  }
+]
