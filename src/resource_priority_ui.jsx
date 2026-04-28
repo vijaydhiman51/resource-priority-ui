@@ -5,10 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import ResourcePriorityGenerator from "./ResourcePriorityGenerator";
 
-// UI Layer only
-// This class is separate from your backend logic class
-// Replace mockGenerateGrid() with your actual ResourcePriorityGenerator usage
-
 const DAYS = [
   "Sunday",
   "Monday",
@@ -33,6 +29,7 @@ function ResourcePriorityUI() {
   const [resource, setResource] = useState(emptyResource);
   const [resources, setResources] = useState([]);
   const [grid, setGrid] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
 
   const handleInput = (field, value) => {
     setResource((prev) => ({
@@ -54,19 +51,53 @@ function ResourcePriorityUI() {
     });
   };
 
-  const addResource = () => {
+  const saveResource = () => {
     if (!resource.Name || !resource.Id) return;
 
-    setResources((prev) => [
-      ...prev,
-      {
-        ...resource,
-        Id: Number(resource.Id),
-        SeasonHours: Number(resource.SeasonHours || 0),
-      },
-    ]);
+    const formattedResource = {
+      ...resource,
+      Id: Number(resource.Id),
+      SeasonHours: Number(resource.SeasonHours || 0),
+    };
+
+    if (editIndex !== null) {
+      setResources((prev) =>
+        prev.map((item, index) =>
+          index === editIndex ? formattedResource : item
+        )
+      );
+      setEditIndex(null);
+    } else {
+      setResources((prev) => [...prev, formattedResource]);
+    }
 
     setResource(emptyResource);
+  };
+
+  const editResource = (index) => {
+    const selected = resources[index];
+
+    setResource({
+      ...selected,
+      Id: String(selected.Id),
+      SeasonHours: String(selected.SeasonHours),
+    });
+
+    setEditIndex(index);
+  };
+
+  const deleteResource = (index) => {
+    setResources((prev) => prev.filter((_, i) => i !== index));
+
+    if (editIndex === index) {
+      setResource(emptyResource);
+      setEditIndex(null);
+    }
+  };
+
+  const cancelEdit = () => {
+    setResource(emptyResource);
+    setEditIndex(null);
   };
 
   const generateGrid = () => {
@@ -82,7 +113,9 @@ function ResourcePriorityUI() {
 
         <Card className="rounded-2xl shadow-sm">
           <CardContent className="p-6 space-y-4">
-            <h2 className="text-xl font-semibold">Add Resource</h2>
+            <h2 className="text-xl font-semibold">
+              {editIndex !== null ? "Edit Resource" : "Add Resource"}
+            </h2>
 
             <div className="grid md:grid-cols-4 gap-4">
               <Input
@@ -106,9 +139,7 @@ function ResourcePriorityUI() {
               <Input
                 placeholder="Season Hours"
                 value={resource.SeasonHours}
-                onChange={(e) =>
-                  handleInput("SeasonHours", e.target.value)
-                }
+                onChange={(e) => handleInput("SeasonHours", e.target.value)}
               />
             </div>
 
@@ -140,9 +171,21 @@ function ResourcePriorityUI() {
               <span>Holiday Available</span>
             </label>
 
-            <Button onClick={addResource} className="rounded-xl">
-              Add Resource
-            </Button>
+            <div className="flex gap-3">
+              <Button onClick={saveResource} className="rounded-xl">
+                {editIndex !== null ? "Update Resource" : "Add Resource"}
+              </Button>
+
+              {editIndex !== null && (
+                <Button
+                  variant="outline"
+                  onClick={cancelEdit}
+                  className="rounded-xl"
+                >
+                  Cancel
+                </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
 
@@ -159,13 +202,31 @@ function ResourcePriorityUI() {
               {resources.map((r, index) => (
                 <div
                   key={index}
-                  className="border rounded-xl p-4 flex justify-between"
+                  className="border rounded-xl p-4 flex justify-between items-center"
                 >
                   <div>
                     <p className="font-semibold">{r.Name}</p>
                     <p className="text-sm text-muted-foreground">
                       Program: {r.Program} | Hours: {r.SeasonHours}
                     </p>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      className="rounded-xl"
+                      onClick={() => editResource(index)}
+                    >
+                      Edit
+                    </Button>
+
+                    <Button
+                      variant="destructive"
+                      className="rounded-xl"
+                      onClick={() => deleteResource(index)}
+                    >
+                      Delete
+                    </Button>
                   </div>
                 </div>
               ))}
