@@ -21,7 +21,7 @@ class ResourcePriorityGenerator {
     return resource.AvailableDays.includes(day);
   }
 
-  // Holiday is treated as a normal day
+  // Holiday treated as equal to any weekday
   totalAvailableDays(resource) {
     let count = resource.AvailableDays.length;
 
@@ -32,7 +32,7 @@ class ResourcePriorityGenerator {
     return count;
   }
 
-  /**** GLOBAL PRIORITY (SINGLE SOURCE OF TRUTH) ****/
+  /**** CORE PRIORITY LOGIC (NO NAME/ID DEPENDENCY) ****/
 
   compare(a, b) {
     const aDays = this.totalAvailableDays(a);
@@ -48,12 +48,22 @@ class ResourcePriorityGenerator {
       return a.SeasonHours - b.SeasonHours;
     }
 
-    // 3. Deterministic fallback
-    return a.Name.localeCompare(b.Name);
+    // 3. No business-based fallback
+    return 0;
   }
 
+  /**** GLOBAL PRIORITY (STABLE) ****/
+
   getGlobalPriority(resources) {
-    return [...resources].sort((a, b) => this.compare(a, b));
+    return resources
+      .map((r, i) => ({ ...r, __index: i })) // attach stable index
+      .sort((a, b) => {
+        const cmp = this.compare(a, b);
+        if (cmp !== 0) return cmp;
+
+        // deterministic neutral fallback
+        return a.__index - b.__index;
+      });
   }
 
   /**** DAY FILTER (NO RE-SORTING) ****/
@@ -74,7 +84,6 @@ class ResourcePriorityGenerator {
     const rows = [];
     const globalPriority = this.getGlobalPriority(resources);
     const maxRows = resources.length;
-
     const days = Object.values(this.DayType);
 
     for (let i = 0; i < maxRows; i++) {
