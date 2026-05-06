@@ -10,8 +10,7 @@
       "Thursday",
       "Friday"
     ],
-    "SeasonHours": 1,
-    "HolidayAvailable": false
+    "SeasonHours": 1
   },
   {
     "Id": 2,
@@ -24,8 +23,7 @@
       "Thursday",
       "Friday"
     ],
-    "SeasonHours": 5,
-    "HolidayAvailable": false
+    "SeasonHours": 5
   },
   {
     "Id": 3,
@@ -40,8 +38,7 @@
       "Friday",
       "Saturday"
     ],
-    "SeasonHours": 2,
-    "HolidayAvailable": false
+    "SeasonHours": 2
   },
   {
     "Id": 4,
@@ -56,8 +53,7 @@
       "Friday",
       "Saturday"
     ],
-    "SeasonHours": 3,
-    "HolidayAvailable": false
+    "SeasonHours": 3
   },
   {
     "Id": 5,
@@ -65,10 +61,10 @@
     "Program": "C",
     "AvailableDays": [
       "Sunday",
-      "Saturday"
+      "Saturday",
+      "Holiday"
     ],
-    "SeasonHours": 1,
-    "HolidayAvailable": true
+    "SeasonHours": 1
   },
   {
     "Id": 6,
@@ -76,9 +72,9 @@
     "Program": "C",
     "AvailableDays": [
       "Sunday",
-      "Saturday"
+      "Saturday",
+      "Holiday"
     ],
-    "SeasonHours": 7,
-    "HolidayAvailable": true
+    "SeasonHours": 7
   }
 ]
